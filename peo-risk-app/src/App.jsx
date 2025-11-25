@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { questions } from "./data/questions";
+import { questions as initialQuestions } from "./data/questions";
 import { QuestionItem } from "./components/QuestionItem";
 import { Button } from "./components/Button";
-import { ShieldCheck, Send } from "lucide-react";
+import { AdminPanel } from "./components/AdminPanel";
+import { ShieldCheck, Send, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function App() {
+  const [questions, setQuestions] = useState(initialQuestions);
   const [answers, setAnswers] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [isAdminMode, setIsAdminMode] = useState(false);
 
   const handleAnswer = (id, value) => {
     setAnswers((prev) => ({ ...prev, [id]: value }));
@@ -22,11 +25,28 @@ function App() {
     setIsComplete(true);
   };
 
+  const handleSaveQuestions = (updatedQuestions) => {
+    setQuestions(updatedQuestions);
+    // In a real app, you would save to a backend here
+    console.log("Questions updated:", updatedQuestions);
+  };
+
   // Filter visible questions based on conditions
   const visibleQuestions = questions.filter((q) => {
     if (!q.condition) return true;
     return q.condition(answers);
   });
+
+  // Admin mode view
+  if (isAdminMode) {
+    return (
+      <AdminPanel
+        questions={questions}
+        onSave={handleSaveQuestions}
+        onBack={() => setIsAdminMode(false)}
+      />
+    );
+  }
 
   if (isComplete) {
     return (
@@ -79,34 +99,51 @@ function App() {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-            <ShieldCheck className="w-6 h-6 text-white" />
+        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+              <ShieldCheck className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="font-bold text-slate-900 text-xl leading-none">PEO RiskGuard</h1>
+              <p className="text-sm text-slate-500 mt-1">Risk Assessment Questionnaire</p>
+            </div>
           </div>
-          <div>
-            <h1 className="font-bold text-slate-900 text-xl leading-none">PEO RiskGuard</h1>
-            <p className="text-sm text-slate-500 mt-1">Risk Assessment Questionnaire</p>
-          </div>
+          <button
+            onClick={() => setIsAdminMode(true)}
+            className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+            title="Admin Panel"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-3xl mx-auto px-6 py-8">
+      <main className="max-w-5xl mx-auto px-6 py-8">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Risk Assessment Questionnaire</h2>
+          <p className="text-slate-600">
+            Please answer all questions to complete your risk assessment. Questions marked with conditional logic will appear based on your previous answers.
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <AnimatePresence mode="popLayout">
-            {visibleQuestions.map((question) => (
+            {visibleQuestions.map((question, index) => (
               <QuestionItem
                 key={question.id}
                 question={question}
                 value={answers[question.id]}
                 onChange={(val) => handleAnswer(question.id, val)}
+                questionNumber={index + 1}
               />
             ))}
           </AnimatePresence>
 
           <motion.div
             layout
-            className="pt-6 border-t border-slate-200"
+            className="pt-6"
           >
             <Button
               type="submit"

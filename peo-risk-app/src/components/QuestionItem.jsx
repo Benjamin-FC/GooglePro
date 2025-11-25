@@ -7,7 +7,7 @@ import { Search, Loader2, Building2, MapPin, Calendar } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./Button";
 
-export function QuestionItem({ question, value, onChange, onLookup }) {
+export function QuestionItem({ question, value, onChange, onLookup, questionNumber }) {
     const [isSearching, setIsSearching] = useState(false);
     const [lookupData, setLookupData] = useState(null);
 
@@ -19,7 +19,12 @@ export function QuestionItem({ question, value, onChange, onLookup }) {
                 className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4"
             >
                 <div className="space-y-1">
-                    <h3 className="text-lg font-semibold text-slate-900">{question.text}</h3>
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xs font-semibold text-slate-500 bg-slate-200 px-2 py-0.5 rounded">
+                            #{questionNumber}
+                        </span>
+                        <h3 className="text-lg font-semibold text-slate-900">{question.text}</h3>
+                    </div>
                     <p className="text-slate-500 text-sm">
                         Please provide your company details to begin the assessment.
                     </p>
@@ -47,6 +52,17 @@ export function QuestionItem({ question, value, onChange, onLookup }) {
         setIsSearching(false);
     };
 
+    const getQuestionTypeLabel = (type) => {
+        const labels = {
+            text: "Text Input",
+            number: "Number Input",
+            textarea: "Text Area",
+            select: "Dropdown",
+            radio: "Radio Buttons",
+        };
+        return labels[type] || type;
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -55,6 +71,14 @@ export function QuestionItem({ question, value, onChange, onLookup }) {
             className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4"
         >
             <div className="space-y-1">
+                <div className="flex items-center gap-3 mb-2">
+                    <span className="text-xs font-semibold text-slate-500 bg-slate-200 px-2 py-0.5 rounded">
+                        #{questionNumber}
+                    </span>
+                    <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                        {getQuestionTypeLabel(question.type)}
+                    </span>
+                </div>
                 <h3 className="text-lg font-semibold text-slate-900">{question.text}</h3>
                 {question.description && (
                     <p className="text-slate-500 text-sm">{question.description}</p>
