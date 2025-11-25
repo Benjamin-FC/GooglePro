@@ -1,21 +1,8 @@
 export const questions = [
     {
-        id: "companyName",
-        text: "What is the company name?",
-        type: "text",
-        placeholder: "Acme Corp",
-    },
-    {
-        id: "state",
-        text: "Which state is your primary operation located in?",
-        type: "select",
-        options: [
-            { label: "California", value: "CA" },
-            { label: "New York", value: "NY" },
-            { label: "Texas", value: "TX" },
-            { label: "Florida", value: "FL" },
-            { label: "Other", value: "other" },
-        ],
+        id: "company_profile",
+        text: "Company Information",
+        type: "company_profile",
     },
     {
         id: "ca_specific_permit",
@@ -25,7 +12,7 @@ export const questions = [
             { label: "Yes", value: "yes" },
             { label: "No", value: "no" },
         ],
-        condition: (answers) => answers.state === "CA",
+        condition: (answers) => answers.company_profile?.state === "CA",
     },
     {
         id: "industry",
@@ -65,12 +52,6 @@ export const questions = [
         text: "Enter your main Workers' Comp Class Code",
         type: "text",
         placeholder: "e.g., 8810",
-    },
-    {
-        id: "employees_count",
-        text: "Total number of employees",
-        type: "number",
-        placeholder: "0",
     },
     {
         id: "claims_history",
