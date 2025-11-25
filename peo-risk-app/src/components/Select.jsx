@@ -1,7 +1,7 @@
 import { cn } from "../lib/utils";
 import { ChevronDown } from "lucide-react";
 
-export function Select({ className, options, placeholder, ...props }) {
+export function Select({ className, options, placeholder, value, ...props }) {
     return (
         <div className="relative">
             <select
@@ -9,7 +9,7 @@ export function Select({ className, options, placeholder, ...props }) {
                     "w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 text-slate-900 appearance-none cursor-pointer hover:border-slate-400",
                     className
                 )}
-                defaultValue=""
+                value={value || ""}
                 {...props}
             >
                 <option value="" disabled>

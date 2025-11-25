@@ -22,7 +22,7 @@ function App() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/assessments', {
+      const response = await fetch('http://localhost:5026/api/assessments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
