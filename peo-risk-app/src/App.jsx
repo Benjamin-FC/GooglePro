@@ -20,9 +20,29 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setIsComplete(true);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/assessments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ answers }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit assessment');
+      }
+
+      const data = await response.json();
+      console.log('Assessment submitted:', data);
+      setIsComplete(true);
+    } catch (error) {
+      console.error('Error submitting assessment:', error);
+      alert('Failed to submit assessment. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSaveQuestions = (updatedQuestions) => {
