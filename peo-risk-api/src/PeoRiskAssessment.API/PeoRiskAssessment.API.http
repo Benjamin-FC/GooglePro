@@ -1,0 +1,6 @@
+@PeoRiskAssessment.API_HostAddress = http://localhost:5258
+
+GET {{PeoRiskAssessment.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
