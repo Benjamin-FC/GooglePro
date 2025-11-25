@@ -37,6 +37,24 @@ function App() {
     return q.condition(answers);
   });
 
+  // Show questions one at a time - only show up to the first unanswered question
+  const questionsToShow = [];
+  for (let i = 0; i < visibleQuestions.length; i++) {
+    const question = visibleQuestions[i];
+    questionsToShow.push(question);
+
+    // Check if this question is answered
+    const answer = answers[question.id];
+    const isAnswered = question.type === 'company_profile'
+      ? answer?.companyName && answer?.state  // For company profile, check if key fields are filled
+      : answer !== undefined && answer !== '';  // For other types, check if not empty
+
+    // If not answered, stop here and don't show more questions
+    if (!isAnswered) {
+      break;
+    }
+  }
+
   // Admin mode view
   if (isAdminMode) {
     return (
@@ -96,13 +114,13 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="bg-white border-b-2 border-slate-200 sticky top-0 z-10 shadow-sm">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-              <ShieldCheck className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+              <ShieldCheck className="w-7 h-7 text-white" />
             </div>
             <div>
               <h1 className="font-bold text-slate-900 text-xl leading-none">PEO RiskGuard</h1>
@@ -111,7 +129,7 @@ function App() {
           </div>
           <button
             onClick={() => setIsAdminMode(true)}
-            className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-2.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors border-2 border-transparent hover:border-slate-200"
             title="Admin Panel"
           >
             <Settings className="w-5 h-5" />
@@ -121,16 +139,9 @@ function App() {
 
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Risk Assessment Questionnaire</h2>
-          <p className="text-slate-600">
-            Please answer all questions to complete your risk assessment. Questions marked with conditional logic will appear based on your previous answers.
-          </p>
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <AnimatePresence mode="popLayout">
-            {visibleQuestions.map((question, index) => (
+            {questionsToShow.map((question, index) => (
               <QuestionItem
                 key={question.id}
                 question={question}
@@ -147,7 +158,7 @@ function App() {
           >
             <Button
               type="submit"
-              className="w-full text-lg h-14"
+              className="w-full text-lg h-14 shadow-lg hover:shadow-xl"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit Assessment"}

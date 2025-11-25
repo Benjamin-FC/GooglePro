@@ -52,118 +52,123 @@ export function QuestionItem({ question, value, onChange, onLookup, questionNumb
         setIsSearching(false);
     };
 
-    const getQuestionTypeLabel = (type) => {
-        const labels = {
-            text: "Text Input",
-            number: "Number Input",
-            textarea: "Text Area",
-            select: "Dropdown",
-                            < Input
-        value = { value || ""
-    }
-    onChange = {(e) => onChange(e.target.value)
-}
-placeholder = { question.placeholder }
-    />
-                        )}
-{
-    question.type === "number" && (
-        <Input
-            type="number"
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={question.placeholder}
-        />
-    )
-}
-{
-    question.type === "textarea" && (
-        <TextArea
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={question.placeholder}
-        />
-    )
-}
-{
-    question.type === "select" && (
-        <Select
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
-            options={question.options || []}
-            placeholder={question.placeholder}
-        />
-    )
-}
-{
-    question.type === "radio" && (
-        <RadioGroup
-            value={value || ""}
-            onChange={onChange}
-            options={question.options || []}
-        />
-    )
-}
-                    </div >
-
-{
-    question.lookup && (
-        <Button
-            type="button"
-            onClick={handleLookup}
-            disabled={!value || isSearching}
-            className="shrink-0"
-        >
-            {isSearching ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-                <Search className="w-5 h-5" />
-            )}
-            Search Sunbiz
-        </Button>
-    )
-}
-                </div >
-
-    {/* Lookup Results */ }
-    < AnimatePresence >
-    { lookupData && question.lookup && (
+    return (
         <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-slate-50 rounded-lg p-4 border-2 border-slate-200 overflow-hidden shadow-sm"
+            className="bg-white p-6 rounded-lg shadow-md border-2 border-slate-200 hover:shadow-lg transition-shadow duration-200"
         >
-            <div className="flex items-start gap-3 mb-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                    <Building2 className="w-5 h-5 text-blue-600" />
+            <div className="space-y-1">
+                <div className="flex items-center gap-3 mb-2">
+                    <span className="text-xs font-semibold text-slate-500 bg-slate-200 px-2 py-0.5 rounded">
+                        #{questionNumber}
+                    </span>
                 </div>
-                <div>
-                    <h4 className="font-semibold text-slate-900">{lookupData.name}</h4>
-                    <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
-                        <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                            {lookupData.status}
-                        </span>
-                        <span>•</span>
-                        <span>Doc #{lookupData.docNumber}</span>
-                    </div>
-                </div>
+                <h3 className="text-lg font-semibold text-slate-900">{question.text}</h3>
+                {question.description && (
+                    <p className="text-slate-500 text-sm">{question.description}</p>
+                )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center gap-2 text-slate-600">
-                    <MapPin className="w-4 h-4 text-slate-400" />
-                    {lookupData.address}
+            <div className="space-y-4 mt-4">
+                <div className="flex gap-3">
+                    <div className="flex-1">
+                        {question.type === "text" && (
+                            <Input
+                                value={value || ""}
+                                onChange={(e) => onChange(e.target.value)}
+                                placeholder={question.placeholder}
+                            />
+                        )}
+                        {question.type === "number" && (
+                            <Input
+                                type="number"
+                                value={value || ""}
+                                onChange={(e) => onChange(e.target.value)}
+                                placeholder={question.placeholder}
+                            />
+                        )}
+                        {question.type === "textarea" && (
+                            <TextArea
+                                value={value || ""}
+                                onChange={(e) => onChange(e.target.value)}
+                                placeholder={question.placeholder}
+                            />
+                        )}
+                        {question.type === "select" && (
+                            <Select
+                                value={value || ""}
+                                onChange={(e) => onChange(e.target.value)}
+                                options={question.options || []}
+                                placeholder={question.placeholder}
+                            />
+                        )}
+                        {question.type === "radio" && (
+                            <RadioGroup
+                                value={value || ""}
+                                onChange={onChange}
+                                options={question.options || []}
+                            />
+                        )}
+                    </div>
+
+                    {question.lookup && (
+                        <Button
+                            type="button"
+                            onClick={handleLookup}
+                            disabled={!value || isSearching}
+                            className="shrink-0"
+                        >
+                            {isSearching ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <Search className="w-5 h-5" />
+                            )}
+                            Search Sunbiz
+                        </Button>
+                    )}
                 </div>
-                <div className="flex items-center gap-2 text-slate-600">
-                    <Calendar className="w-4 h-4 text-slate-400" />
-                    Filed: {lookupData.filingDate}
-                </div>
+
+                {/* Lookup Results */}
+                <AnimatePresence>
+                    {lookupData && question.lookup && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="bg-slate-50 rounded-lg p-4 border-2 border-slate-200 overflow-hidden shadow-sm"
+                        >
+                            <div className="flex items-start gap-3 mb-3">
+                                <div className="p-2 bg-blue-100 rounded-lg">
+                                    <Building2 className="w-5 h-5 text-blue-600" />
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold text-slate-900">{lookupData.name}</h4>
+                                    <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
+                                        <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                            {lookupData.status}
+                                        </span>
+                                        <span>•</span>
+                                        <span>Doc #{lookupData.docNumber}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div className="flex items-center gap-2 text-slate-600">
+                                    <MapPin className="w-4 h-4 text-slate-400" />
+                                    {lookupData.address}
+                                </div>
+                                <div className="flex items-center gap-2 text-slate-600">
+                                    <Calendar className="w-4 h-4 text-slate-400" />
+                                    Filed: {lookupData.filingDate}
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </motion.div>
-    )}
-                </AnimatePresence >
-            </div >
-        </motion.div >
     );
 }
